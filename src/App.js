@@ -5,6 +5,7 @@ import ServerProgressBar from "./components/ProgressBar/ServerProgressBar";
 import AnimatedCircularProgressbar from "./components/ProgressBar/CircularProgressbar";
 import Cards from "./components/Card/Cards";
 import TryButton from "./components/Buttono/TryButton";
+import NumberFlow, { continuous } from "@number-flow/react";
 
 function App() {
   const [percentage, setPercentage] = useState(0);
@@ -30,9 +31,8 @@ function App() {
           }
           return prev + 1;
         });
-      }, 50);
+      }, 100);
     }
-
     return () => clearInterval(progressInterval);
   }, [status]);
 
@@ -41,14 +41,28 @@ function App() {
     setPercentage(0);
   };
 
+
   return (
     <main className="main-container py-5 py-lg-0">
-      <section className={`square  ${status}`}>
-      <div className="square-border" ></div>
+      <section className={`square ${status}`}>
+        <div className="square-border"></div>
+
         {status === "loading" && (
           <>
-          
-         <h1>{new Intl.NumberFormat("fa-IR").format(percentage) + "٪"}</h1>
+<div className="flip-number-container d-flex">
+  <span className="leading-zero">{percentage < 10 ? "0" : ""}</span>
+  <NumberFlow
+  className="flip-number"
+    value={percentage}
+    isolate={false}
+    plugins={[continuous]} 
+    suffix="%"
+    style={{ fontFamily: "Yekan_Bakh", fontSize: "40px", fontWeight: 800 }}
+  />
+  {/* <span>%</span> */}
+</div>
+
+
             <div style={{ width: 53, height: 53 }}>
               <AnimatedCircularProgressbar value={percentage} />
             </div>
