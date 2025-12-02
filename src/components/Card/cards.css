@@ -175,11 +175,11 @@
 
 .map-dot {
   position: absolute;
-  width: 15px;
-  height: 15px;
-  background: rgba(0, 255, 170, 0.7);
+  width: 7px;
+  height: 7px;
+  background: #11FF98;
   border-radius: 50%;
-  box-shadow: 0 0 15px rgba(0, 255, 170, 0.9);
+  box-shadow: 0 0 15px 1px #11FF98;
   animation: pulse 2.5s infinite ease-in-out;
 }
 
@@ -187,50 +187,49 @@
 .dot-1 {
   top: 18%;
   left: 30%;
-  animation-delay: 0s;
+  animation-delay: 0s !important;
 }
 
 .dot-2 {
   top: 32%;
   left: 78%;
-  animation-delay: 0.5s;
+  animation-delay: 0.5s !important;
 }
 
 .dot-3 {
   top: 70%;
   left: 33%;
-  animation-delay: 1s;
+  animation-delay: 1s !important;
 }
 
 .dot-4 {
   top: 60%;
   left: 55%;
-  animation-delay: 1.5s;
+  animation-delay: 1.5s !important;
 }
 
 .dot-5 {
   top: 35%;
   left: 63%;
-  animation-delay: 2s;
+  animation-delay: 2s !important;
 }
 
 @keyframes pulse {
   0% {
-    -webkit-transform: translateY(-50%) scale(1);
-    transform: translateY(-50%) scale(1);
-    opacity: 0.6;
+    transform: scale(1);
+    opacity: .6;
+
   }
 
   50% {
-    -webkit-transform: translateY(-50%) scale(1.3);
-    transform: translateY(-50%) scale(1.3);
+    transform: scale(1.3);
     opacity: 1;
   }
 
   100% {
-    -webkit-transform: translateY(-50%) scale(1);
-    transform: translateY(-50%) scale(1);
-    opacity: 0.6;
+    transform: scale(1);
+    opacity: .6;
+
   }
 }
 
@@ -240,13 +239,8 @@
 
 @media (max-width: 992px) {
   .map-dot {
-    position: absolute;
-    width: 12px;
-    height: 12px;
-    background: rgba(0, 255, 170, 0.7);
-    border-radius: 50%;
-    box-shadow: 0 0 15px rgba(0, 255, 170, 0.9);
-    animation: pulse 2s infinite ease-in-out;
+    width: 6px;
+    height: 6px;
   }
 
   .box {
