@@ -1,19 +1,21 @@
 {
   "files": {
-    "main.css": "/con/static/css/main.d5843f9c.css",
-    "main.js": "/con/static/js/main.42f46395.js",
+    "main.css": "/con/static/css/main.36084288.css",
+    "main.js": "/con/static/js/main.71cb4713.js",
     "static/media/map.svg": "/con/static/media/map.fc9650b3c457a5ba8862d0d58d17ae86.svg",
     "static/media/game1.png": "/con/static/media/game1.f70c0ab2a54d62ccff55.png",
     "static/media/game2.png": "/con/static/media/game2.0801bd58eea760ecafd6.png",
+    "static/media/game1-sm.png": "/con/static/media/game1-sm.0681f91d18181bd7619e.png",
+    "static/media/game2-sm.png": "/con/static/media/game2-sm.e6cde39957699fb80c3a.png",
+    "static/media/gmae3-sm.png": "/con/static/media/gmae3-sm.fcbe65b91f25ab5eb20d.png",
     "static/media/gmae3.png": "/con/static/media/gmae3.7aadbac586c58b659197.png",
-    "static/media/warning-square.svg": "/con/static/media/warning-square.2dec5578fd784c441fa8.svg",
     "index.html": "/con/index.html",
-    "static/media/success-square.svg": "/con/static/media/success-square.4f392f4f5334cbd6e8b9.svg",
-    "main.d5843f9c.css.map": "/con/static/css/main.d5843f9c.css.map",
-    "main.42f46395.js.map": "/con/static/js/main.42f46395.js.map"
+    "static/media/box-border.svg": "/con/static/media/box-border.1714e6944586fce39953.svg",
+    "main.36084288.css.map": "/con/static/css/main.36084288.css.map",
+    "main.71cb4713.js.map": "/con/static/js/main.71cb4713.js.map"
   },
   "entrypoints": [
-    "static/css/main.d5843f9c.css",
-    "static/js/main.42f46395.js"
+    "static/css/main.36084288.css",
+    "static/js/main.71cb4713.js"
   ]
 }
