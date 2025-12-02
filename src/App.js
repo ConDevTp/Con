@@ -31,7 +31,7 @@ function App() {
           }
           return prev + 1;
         });
-      }, 35);
+      }, 18);
     }
     return () => clearInterval(progressInterval);
   }, [status]);

@@ -267,6 +267,7 @@
   .box:nth-child(1) {
     height: 241.5px !important;
     margin-top: 10px !important;
+    background: radial-gradient(50% 50% at 50% 50%, rgba(69, 55, 100, 0.4) 0%, rgba(0, 0, 0, 0.4) 100%) !important;
   }
 
 
