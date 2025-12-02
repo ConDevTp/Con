@@ -6,6 +6,7 @@ import AnimatedCircularProgressbar from "./components/ProgressBar/CircularProgre
 import Cards from "./components/Card/Cards";
 import TryButton from "./components/Buttono/TryButton";
 import NumberFlow, { continuous } from "@number-flow/react";
+import StatusAnimatedText from "./components/TextAnimaion/StatusAnimatedText";
 
 function App() {
   const [percentage, setPercentage] = useState(0);
@@ -168,18 +169,11 @@ function App() {
         {status === "failed" && windowWidth >= 992 && (
           <TryButton status={status} onClick={handleRetry} />
         )}
-        <h2 className="text-result">
-          {status === "loading" &&
-            (percentage < 30
-              ? "در حال ارتباط با سرورها"
-              : percentage < 60
-              ? "در حال انتخاب سریع ترین سرور"
-              : percentage < 80
-              ? "در حال ثبت آیپی"
-              : "در حال تکمیل...")}
-          {status === "connected" && "اینترنت شما به سرور های ققنوس متصل شد"}
-          {status === "failed" && "لطفا فیلترشکن خود را خاموش کنید"}
-        </h2>
+        <StatusAnimatedText
+          status={status}
+          percentage={percentage}
+          windowWidth={windowWidth}
+        />
       </section>
 
       <Cards status={status} percentage={percentage} isChange={ip} />
