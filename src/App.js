@@ -15,7 +15,6 @@ function App() {
   const [ip, setIp] = useState(false);
   const [shouldAnimate, setShouldAnimate] = useState(true);
 
-
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
     window.addEventListener("resize", handleResize);
@@ -43,27 +42,33 @@ function App() {
 
     let cancelled = false;
 
-    (async () => {
+    const fetchIP = async () => {
       try {
-        const res = await fetch("https://ipwho.is/");
+        const res = await fetch("https://ipwhois.app/json/");
         const data = await res.json();
-        
 
-        console.log("IP API response (prefetch):", data);
+        if (cancelled) return;
 
-        if (data?.success === false) {
-          console.error("IP API logical error:", data.message);
-          if (!cancelled) setNextStatus("failed");
-          return;
+        console.log("IP API response:", data);
+
+        setIp(data?.ip || "نامشخص"); // ذخیره IP برای کارت‌ها
+        const resultStatus =
+          data?.country_code === "IR" ? "connected" : "failed";
+
+        // فقط اگر status هنوز loading است nextStatus را ست کن
+        if (!cancelled && status === "loading") {
+          setNextStatus(resultStatus);
         }
-
-        const resultStatus = data?.country_code === "IR" ? "connected" : "failed";
-        if (!cancelled) setNextStatus(resultStatus);
-      } catch (error) {
-        console.error("IP prefetch failed:", error);
-        if (!cancelled) setNextStatus("failed");
+      } catch (err) {
+        console.error("IP fetch failed:", err);
+        if (!cancelled && status === "loading") {
+          setIp("نامشخص");
+          setNextStatus("failed");
+        }
       }
-    })();
+    };
+
+    fetchIP();
 
     return () => {
       cancelled = true;
@@ -77,18 +82,14 @@ function App() {
   }, [status, percentage, nextStatus]);
 
   const handleRetry = () => {
-       setShouldAnimate(false);
-    setTimeout(() => {
-      setShouldAnimate(true);
-    }, 50);
-    setPercentage(0);
-    setNextStatus(null);
-    setStatus("loading");
-    setIp(!ip);
-    
-  };
+    setShouldAnimate(false);
+    setTimeout(() => setShouldAnimate(true), 50);
 
-  
+    setPercentage(0);
+    setNextStatus(null); // پاک کردن وضعیت قبلی
+    setIp(false); // پاک کردن IP قبلی
+    setStatus("loading"); // شروع دوباره
+  };
 
   return (
     <main className="main-container py-5 py-lg-0">
@@ -96,7 +97,9 @@ function App() {
         <div className="square-border"></div>
 
         <svg
-          className={`m-icon m-icon-check ${status !== "connected" ? "m-hide" : ""}`}
+          className={`m-icon m-icon-check ${
+            status !== "connected" ? "m-hide" : ""
+          }`}
           width="83"
           height="65"
           viewBox="0 0 83 65"
@@ -129,9 +132,7 @@ function App() {
         {status === "loading" && (
           <>
             <div className="flip-number-container d-flex">
-              <span className="leading-zero">
-                {percentage < 10 ? "0" : ""}
-              </span>
+              <span className="leading-zero">{percentage < 10 ? "0" : ""}</span>
               <NumberFlow
                 className="flip-number"
                 value={percentage}
@@ -157,12 +158,11 @@ function App() {
         )}
       </section>
 
-   <ServerProgressBar
-  status={status}
-  progress={percentage}
-  animate={shouldAnimate}
-/>
-
+      <ServerProgressBar
+        status={status}
+        progress={percentage}
+        animate={shouldAnimate}
+      />
 
       <section className="mt-3 mt-md-4 d-flex justify-content-center align-items-center">
         {status === "failed" && windowWidth >= 992 && (
@@ -177,13 +177,12 @@ function App() {
               : percentage < 80
               ? "در حال ثبت آیپی"
               : "در حال تکمیل...")}
-          {status === "connected" &&
-            "اینترنت شما به سرور های ققنوس متصل شد"}
+          {status === "connected" && "اینترنت شما به سرور های ققنوس متصل شد"}
           {status === "failed" && "لطفا فیلترشکن خود را خاموش کنید"}
         </h2>
       </section>
 
-      <Cards status={status} percentage={percentage} isChange={ip}  />
+      <Cards status={status} percentage={percentage} isChange={ip} />
     </main>
   );
 }
