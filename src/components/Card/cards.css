@@ -98,7 +98,23 @@
   z-index: 3;
   width: 50%;
   border-radius: 7px !important;
+  cursor: pointer;
+  transition: .5s all;
 }
+
+
+.con-games:hover img:nth-child(1) {
+  transform: translateY(5px);
+}
+
+.con-games:hover img:nth-child(2) {
+  transform: translateY(-10px) translateX(5px) rotate(-5deg);
+}
+
+.con-games:hover img:nth-child(3) {
+  transform: translateY(-28px)translateX(0px) rotate(-5deg);
+}
+
 
 .con-games img:nth-child(1) {
   top: -12px;
@@ -281,6 +297,8 @@
     width: 120px;
   }
 
+
+
   .con-games img:nth-child(1) {
     top: -30px;
     right: 20px;
@@ -317,5 +335,17 @@
     font-size: 12px !important;
     margin: 0px !important;
     margin-right: 3px !important;
+  }
+
+  .con-games:hover img:nth-child(1) {
+    transform: translateY(5px);
+  }
+
+  .con-games:hover img:nth-child(2) {
+    transform: translateY(-5px) rotate(0deg);
+  }
+
+  .con-games:hover img:nth-child(3) {
+    transform: translateY(-20px)translateX(0px) rotate(-5deg) !important;
   }
 }
