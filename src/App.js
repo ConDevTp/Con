@@ -31,7 +31,7 @@ function App() {
           }
           return prev + 1;
         });
-      }, 100);
+      }, 35);
     }
     return () => clearInterval(progressInterval);
   }, [status]);
@@ -87,7 +87,7 @@ function App() {
         <div className="square-border"></div>
 
         <svg
-          className={`m-icon ${status !== "connected" ? "m-hide" : ""}`}
+          className={`m-icon m-icon-check ${status !== "connected" ? "m-hide" : ""}`}
           width="83"
           height="65"
           viewBox="0 0 83 65"

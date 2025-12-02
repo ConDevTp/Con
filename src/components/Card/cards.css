@@ -49,19 +49,17 @@
   position: relative;
 }
 
-
-
 .loading-circle::before {
   content: "";
   width: 5px;
   height: 5px;
   border-radius: 50%;
   position: absolute;
-  left: -13px;
+  left: -12px;
   top: 50%;
-  transform: translateY(-85%) !important;
-  background-color: #3a8fff;
-  box-shadow: 0 0 10px 1px #3a8fff66;
+  transform: translateY(-50%);
+  background-color: #11ff98;
+  box-shadow: 0 0 10px 1px #11ff98ca;
   animation: pulse 1s infinite;
 }
 
