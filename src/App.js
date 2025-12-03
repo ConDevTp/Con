@@ -29,7 +29,6 @@ function App() {
   const [isGet, setIsGet] = useState(false);
   const [finalStatus, setFinalStatus] = useState(null);
 
-  // فقط 10 ثانیه بعد isGet فعال می‌شود
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsGet(true);
@@ -37,7 +36,6 @@ function App() {
     return () => clearTimeout(timer);
   }, []);
 
-  // فقط گرفتن آی‌پی (بدون شرایط اینترنت)
   useEffect(() => {
     if (isGet) {
       let cancelled = false;
@@ -67,7 +65,6 @@ function App() {
     }
   }, [isGet]);
 
-  // انیمیشن درصد
   useEffect(() => {
     if (!isGet || status !== "loading") return;
 
@@ -84,7 +81,6 @@ function App() {
     return () => clearInterval(progressInterval);
   }, [status, isGet]);
 
-  // تعیین وضعیت نهایی
   useEffect(() => {
     if (!isGet) return;
 
@@ -108,7 +104,6 @@ function App() {
     }, 10000);
   };
 
-  // preload images
   useEffect(() => {
     images.forEach((src) => {
       const img = new Image();
@@ -140,14 +135,12 @@ function App() {
           </motion.div>
         ) : (
           <>
-            {/* Hidden Preload */}
             <div style={{ position: "absolute", visibility: "hidden" }}>
               <div className="ui-preload">
                 <div className="d-flex justify-content-center align-items-center flex-column w-100">
                   <section className={`square ${status}`}>
                     <div className="square-border"></div>
 
-                    {/* ICONS */}
                     <svg
                       className={`m-icon m-icon-check ${
                         status !== "connected" ? "m-hide" : ""
@@ -236,7 +229,6 @@ function App() {
               </div>
             </div>
 
-            {/* UI واقعی */}
             <motion.div
               className="w-100"
               key="ui"
