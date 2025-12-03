@@ -131,34 +131,6 @@ function App() {
     });
   }, []);
 
-  useEffect(() => {
-    const loadFonts = async () => {
-      try {
-        const semiBold = new FontFace(
-          "YekanBakh-SemiBold",
-          `url(/assets/fonts/Yekan_Bakh/YekanBakh-SemiBold.woff)`
-        );
-
-        const extraBold = new FontFace(
-          "YekanBakh-ExtraBold",
-          `url(/assets/fonts/Yekan_Bakh/YekanBakh-ExtraBold.woff)`
-        );
-
-        await semiBold.load();
-        await extraBold.load();
-
-        document.fonts.add(semiBold);
-        document.fonts.add(extraBold);
-
-        console.log("Fonts loaded!");
-      } catch (e) {
-        console.error("Font error:", e);
-      }
-    };
-
-    loadFonts();
-  }, []);
-
   return (
     <main className="main-container py-5 py-lg-0">
       <AnimatePresence>
