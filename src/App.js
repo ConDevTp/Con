@@ -22,7 +22,7 @@ const images = [
 
 const getIpInfo = async () => {
   try {
-    const response = await axios.get("http://ip-api.com/json");
+   const response = await axios.get("https://ip-api.com/json");
     return response.data;
   } catch (err) {
     throw new Error("Unable to fetch IP information");
