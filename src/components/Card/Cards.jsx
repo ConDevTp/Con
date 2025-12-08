@@ -72,7 +72,7 @@ const Cards = ({ status, ip }) => {
             )}
 
             <h4 className={status === "failed" ? "failed-text" : ""}>
-              {ip ? ip.query : "لودینگ ..."}
+              {ip ? ip.ip : "لودینگ ..."}
             </h4>
           </div>
           <h5

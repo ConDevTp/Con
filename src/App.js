@@ -22,7 +22,7 @@ const images = [
 
 const getIpInfo = async () => {
   try {
-   const response = await axios.get("https://ip-api.com/json");
+    const response = await axios.get("https://cloudflare.com/cdn-cgi/trace");
     return response.data;
   } catch (err) {
     throw new Error("Unable to fetch IP information");
@@ -31,21 +31,32 @@ const getIpInfo = async () => {
 
 function App() {
   const [ipInfo, setIpInfo] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
   const [hasAlerted, setHasAlerted] = useState(false);
   const [percentage, setPercentage] = useState(0);
   const [status, setStatus] = useState("loading");
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
+  const parseIpInfo = (str) => {
+    const result = {};
+    str.split("\n").forEach((line) => {
+      const [key, value] = line.split("=");
+      if (key) result[key] = value;
+    });
+    return result;
+  };
+
   const fetchIpData = async () => {
     try {
-      const data = await getIpInfo();
+      const data1 = await getIpInfo();
+      const data = parseIpInfo(data1);
+
       setIpInfo(data);
     } catch (err) {
       setError(true);
     } finally {
-      setIsLoading(true);
+      setIsLoading(false);
     }
   };
   useEffect(() => {
@@ -53,12 +64,10 @@ function App() {
   }, []);
 
   let isInIran;
-  isInIran = ipInfo && (ipInfo.country === "IR" || ipInfo.country === "Iran");
+  isInIran = ipInfo && ipInfo.loc === "IR";
 
   useEffect(() => {
-    setIsLoading(false);
     if (error && !hasAlerted) {
-      setIsLoading(false);
       setHasAlerted(true);
       console.error("Error fetching IP data: ", error);
       alert("Please check your internet and try again.");
@@ -66,7 +75,7 @@ function App() {
   }, [error, hasAlerted]);
 
   useEffect(() => {
-    if (!isLoading || status !== "loading") return;
+    if (isLoading || status !== "loading") return;
 
     let progressInterval = setInterval(() => {
       setPercentage((prev) => {
@@ -76,7 +85,7 @@ function App() {
         }
         return prev + 1;
       });
-    }, 30);
+    }, 26);
 
     return () => clearInterval(progressInterval);
   }, [status, isLoading]);
@@ -112,7 +121,7 @@ function App() {
   return (
     <main className="main-container py-5 py-lg-0">
       <AnimatePresence>
-        {!isLoading ? (
+        {isLoading ? (
           <motion.div
             key="loading"
             initial={{ position: "absolute", opacity: 0 }}
