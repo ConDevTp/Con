@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import "./App.css";
-
 import ServerProgressBar from "./components/ProgressBar/ServerProgressBar";
 import AnimatedCircularProgressbar from "./components/ProgressBar/CircularProgressbar";
 import Cards from "./components/Card/Cards";
@@ -9,6 +8,7 @@ import NumberFlow, { continuous } from "@number-flow/react";
 import StatusAnimatedText from "./components/TextAnimaion/StatusAnimatedText";
 import Loading from "./components/Loading/Loading";
 import { AnimatePresence, motion } from "framer-motion";
+import axios from "axios";
 
 const images = [
   require("./assets/game1.png"),
@@ -20,88 +20,53 @@ const images = [
   require("./assets/map.png"),
 ];
 
+const getIpInfo = async () => {
+  try {
+    const response = await axios.get("http://ip-api.com/json");
+    return response.data;
+  } catch (err) {
+    throw new Error("Unable to fetch IP information");
+  }
+};
+
 function App() {
+  const [ipInfo, setIpInfo] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const [hasAlerted, setHasAlerted] = useState(false);
   const [percentage, setPercentage] = useState(0);
   const [status, setStatus] = useState("loading");
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  const [ip, setIp] = useState(false);
-  const [shouldAnimate, setShouldAnimate] = useState(true);
-  const [isGet, setIsGet] = useState(false);
-  const [finalStatus, setFinalStatus] = useState(null);
-  const [showLoading, setShowLoading] = useState(true);
 
-
-useEffect(() => {
-  let cancelled = false;
-
-  const loadIP = async () => {
-    // حداقل زمان لودینگ
-    const MIN_LOADING = 700;
-    const startTime = Date.now();
-
+  const fetchIpData = async () => {
     try {
-      const res = await fetch("https://ipwhois.app/json/");
-      const data = await res.json();
-
-      if (cancelled) return;
-
-      // محاسبه باقی‌مانده زمان حداقلی
-      const elapsed = Date.now() - startTime;
-      const remaining = MIN_LOADING - elapsed;
-
-      setTimeout(() => {
-        setIp(data?.ip || "نامشخص");
-        const status = data?.country_code === "IR" ? "connected" : "failed";
-        setFinalStatus(status);
-        setIsGet(true);
-      }, remaining > 0 ? remaining : 0);
-    } catch {
-      if (!cancelled) {
-        setTimeout(() => {
-          setIp("نامشخص");
-          setFinalStatus("failed");
-          setIsGet(true);
-        }, 500); // برای خطا هم حداقل ۵۰۰ms لودینگ
-      }
+      const data = await getIpInfo();
+      setIpInfo(data);
+    } catch (err) {
+      setError(true);
+    } finally {
+      setIsLoading(true);
     }
   };
+  useEffect(() => {
+    fetchIpData();
+  }, []);
 
-  loadIP();
-  return () => (cancelled = true);
-}, []);
-
+  let isInIran;
+  isInIran = ipInfo && (ipInfo.country === "IR" || ipInfo.country === "Iran");
 
   useEffect(() => {
-    if (isGet) {
-      let cancelled = false;
-
-      const fetchIP = async () => {
-        try {
-          const res = await fetch("https://ipwhois.app/json/");
-          const data = await res.json();
-          if (cancelled) return;
-
-          setIp(data?.ip || "نامشخص");
-          const resultStatus =
-            data?.country_code === "IR" ? "connected" : "failed";
-          setFinalStatus(resultStatus);
-        } catch {
-          if (!cancelled) {
-            setIp("نامشخص");
-            setFinalStatus("failed");
-          }
-        }
-      };
-
-      fetchIP();
-      return () => {
-        cancelled = true;
-      };
+    setIsLoading(false);
+    if (error && !hasAlerted) {
+      setIsLoading(false);
+      setHasAlerted(true);
+      console.error("Error fetching IP data: ", error);
+      alert("Please check your internet and try again.");
     }
-  }, [isGet]);
+  }, [error, hasAlerted]);
 
   useEffect(() => {
-    if (!isGet || status !== "loading") return;
+    if (!isLoading || status !== "loading") return;
 
     let progressInterval = setInterval(() => {
       setPercentage((prev) => {
@@ -114,49 +79,22 @@ useEffect(() => {
     }, 30);
 
     return () => clearInterval(progressInterval);
-  }, [status, isGet]);
+  }, [status, isLoading]);
 
   useEffect(() => {
-    if (!isGet) return;
-
-    if (status === "loading" && percentage === 100 && finalStatus) {
-      setStatus(finalStatus);
+    if (percentage !== 100) return;
+    if (isInIran) {
+      setStatus("connected");
+    } else {
+      setStatus("failed");
     }
-  }, [status, percentage, finalStatus, isGet]);
+  }, [percentage]);
 
-const handleRetry = () => {
-  setShouldAnimate(false);
-  setTimeout(() => setShouldAnimate(true), 50);
-
-  setPercentage(0);
-  setStatus("loading");
-  setIp(false);
-  setFinalStatus(null);
-
-  // IP دوباره گرفته شود
-  let cancelled = false;
-
-  const fetchIPAgain = async () => {
-    try {
-      const res = await fetch("https://ipwhois.app/json/");
-      const data = await res.json();
-      if (cancelled) return;
-
-      setIp(data?.ip || "نامشخص");
-      setFinalStatus(data?.country_code === "IR" ? "connected" : "failed");
-      setIsGet(true); // نمایش UI اصلی
-    } catch {
-      if (!cancelled) {
-        setIp("نامشخص");
-        setFinalStatus("failed");
-        setIsGet(true);
-      }
-    }
+  const handleRetry = () => {
+    fetchIpData();
+    setStatus("loading");
+    setPercentage(0);
   };
-
-  fetchIPAgain();
-};
-
 
   useEffect(() => {
     images.forEach((src) => {
@@ -173,10 +111,8 @@ const handleRetry = () => {
 
   return (
     <main className="main-container py-5 py-lg-0">
-        <p>آی‌پی شما: {ip}</p>
-
       <AnimatePresence>
-        {showLoading && !isGet ? (
+        {!isLoading ? (
           <motion.div
             key="loading"
             initial={{ position: "absolute", opacity: 0 }}
@@ -270,11 +206,7 @@ const handleRetry = () => {
                   )}
                 </section>
 
-                <ServerProgressBar
-                  status={status}
-                  progress={percentage}
-                  animate={shouldAnimate}
-                />
+                <ServerProgressBar status={status} progress={percentage} />
 
                 <section className="mt-3 mt-md-4 d-flex justify-content-center align-items-center">
                   {status === "failed" && windowWidth >= 992 && (
@@ -287,7 +219,7 @@ const handleRetry = () => {
                   />
                 </section>
 
-                <Cards status={status} percentage={percentage} isChange={ip} />
+                <Cards status={status} percentage={percentage} ip={ipInfo} />
               </div>
             </motion.div>
           </>

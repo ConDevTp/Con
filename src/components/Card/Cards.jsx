@@ -1,8 +1,7 @@
 import { FaAngleLeft } from "react-icons/fa6";
 import "./cards.css";
-import UserIP from "./UserIP";
 
-const Cards = ({ status, isChange }) => {
+const Cards = ({ status, ip }) => {
   return (
     <section className="mt-4 pt-2 d-flex flex-column-reverse flex-lg-row justify-content-center align-items-center w-100">
       <div className="box box-map d-flex justify-content-center align-items-center">
@@ -71,7 +70,10 @@ const Cards = ({ status, isChange }) => {
                 />
               </svg>
             )}
-            <UserIP status={status} isChange={isChange} />
+
+            <h4 className={status === "failed" ? "failed-text" : ""}>
+              {ip ? ip.query : "لودینگ ..."}
+            </h4>
           </div>
           <h5
             className={
