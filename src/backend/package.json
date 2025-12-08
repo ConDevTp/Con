@@ -1,0 +1,18 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Backend server for VPN App",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.22.1",
+    "geoip-lite": "^1.4.10",
+    "ipinfo": "^1.5.2",
+    "node-fetch": "^2.7.0",
+    "request-ip": "^3.3.0"
+  }
+}
